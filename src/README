@@ -1,0 +1,112 @@
+Obsidian 
+========
+
+Due the high requiremnts in terms of volatile and persistent memory (ram and disk),
+Obfsidian is composed by different stop. To obtain your flows obfuscated according
+with the K-J Obfuscation technique, you have to perform all the steps.
+
+stage 1: Analyze dataset
+------------------------
+
+Create DB. In this stage, we analyze the flows and create a database (and relative)
+index of feature for the IP addresses in the dataset.
+
+python main.py -d <inputdir> -d <outputdir> -t <number>
+
+Options
+-d : the input directory of the flows written in the nfStat format (plese refer 
+to the contrib directory)
+-o : the output dir 
+-t : the number of threat that simultaneously can run (plese condire the ram 
+limit of your system).
+
+
+stage 2: Evaluate the Hilbert Index for each IP
+----------------------------------------------
+
+In this stage, we read the Database (using correlated index) and 
+evalute the Hilbert index for each IP addresses
+
+# python hilbert.py -i|--input-file <inputfile> -o|--output-file <outputfile>
+
+Options
+-i|--input-file: set the input file (database). The index of the database is 
+    self loaded 
+-o|--output-file: set the output file 
+
+After the Hilbert Index evaluatio, we sort the output file by ascending hilbert 
+index value. We use the unix'shell command sort
+
+example:
+# sort -n -k 2 -o <outputfile> <inputfile> 
+
+
+stage 3: generate the GroupIP file
+---------------------------------
+
+In this stage, we create the GroupIP file, an ASCII dataset that containt the association 
+between IP addresses and GroupLeader (namely, the random value assumed by each address in 
+the group
+
+# python groupIP.py -f <sorted ip-hilbert map file> -k <number> -o <groupIPdatabase>
+
+Options:
+-f: this is the file generated in stage 2
+-k: the value for the parameter k. It is a number, e.g. 10 
+-o: outfile, namely a GroupIP-IP mapping file
+
+
+stage 4: K Parameter
+-------------------------
+
+This software creates ASCII files and replace each source and destination IP addresses 
+with the obfuscated verion. It requires, as input, the original dataset and the GroupIP
+file.
+
+# python obfuscation-1.py -k <number> -d <input db> -o <output db> -g <GIP-IP map file>
+
+Options:
+-k: the K valued used to group the ip addresses
+-d: intput database 
+-o: output file 
+-g: the GroupIP-IP map file 
+
+
+stage 5: Y Parameter
+--------------------
+
+In this stage, we alter the fp-qi fields and group then according with the J parameter
+
+# python obfuscation-2.py -j <number> -d <k-database input file> -o <kj-output file>
+-j: the j values, it is a number, e.g. 4
+-d: the input database
+-o: the outfile, namely the obfuscated version of your original dataset 
+
+
+INCREMENTAL VERSION
+===================
+
+In order to produce and incremental dataset of real CISCO netflows, we have to 
+introduce some stage. This step aim to make incremental dataset and incremental 
+GroupIP-IP map files The application of Stage 4 (K paramter) and Stage 5 (Y 
+Parameter) do not change.
+
+Stage IncrementalDB
+-------------------
+The Database of each incremental release (e.g., a 3h-long dataset) are evalauted
+using Stage 1. Then, we have to evaluate the new GIP-IP files that include the 
+old entries and the new ones according with the algorithm description.
+
+# python merge_mulitple.py -s <Dir with two DB> -o <out DB>
+
+Options
+-s:--stat-db: a dir contining two databases of IP addresses db
+-o:--output: output db file 
+ 
+ Evaluate the IP-Hilbert file according with stage 2
+ 
+# python incremental_2.py 
+-n|--new: the IP-Hilbert file of new release 
+-g|--old: the GroupIP-IP file of the previous release
+-o|--out: output file, namely the New GroupIP file 
+

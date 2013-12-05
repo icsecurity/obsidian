@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#29/09/2010
+./nfStat -R /mnt/nfsen/extrabirewp2000/2010/29/09/ -k 0 -O out_2010_29_09_srcip
+./nfStat -R /mnt/nfsen/extrabirewp2000/2010/29/09/ -k 1 -O out_2010_29_09_dstip
+./nfStat -R /mnt/nfsen/extrabirewp2000/2010/29/09/ -k 2 -O out_2010_29_09_srcip-port
+./nfStat -R /mnt/nfsen/extrabirewp2000/2010/29/09/ -k 3 -O out_2010_29_09_dstip-port
+
+#13/02/2011
+./nfStat -R /mnt/nfsen/extrabirewp2000/2011/02/13/ -k 0 -O out_2011_02_13_srcip
+./nfStat -R /mnt/nfsen/extrabirewp2000/2011/02/13/ -k 1 -O out_2011_02_13_dstip
+./nfStat -R /mnt/nfsen/extrabirewp2000/2011/02/13/ -k 2 -O out_2011_02_13_srcip-port
+./nfStat -R /mnt/nfsen/extrabirewp2000/2011/02/13/ -k 3 -O out_2011_02_13_dstip-port
+

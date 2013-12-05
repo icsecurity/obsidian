@@ -1,0 +1,18 @@
+This software is a modified version of nfdump (a software included in nfdump package).
+
+It read and convert nfcapd file produced by the nfdump collector (nfreader) and convert
+it in a specific format for obsidian.
+
+
+Install
+
+Please install the gnu make tool
+
+# ./configure
+
+# make && make install
+
+Usage
+
+# nfStat (see nfdump for more specification)
+
